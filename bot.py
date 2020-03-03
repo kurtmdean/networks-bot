@@ -21,6 +21,8 @@ async def on_message(message):
     src = message.author.id
     messages = await message.channel.history(limit=123).flatten()
     dst = messages[1].author.id # author of previous message, TODO: probably breaks on first message in new channel
+    if src == dst: # ignore replies to self
+        return
 
     # update network
     if src not in bot.network.keys():
