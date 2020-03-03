@@ -1,5 +1,9 @@
 # networks-bot
 
+## Current State
+
+Every instance will start the network anew. This can only work in one discord.
+
 ## Goals
 
     - map the social network in this server as messages are sent
@@ -7,6 +11,8 @@
         - role-to-role
         - person-to-person
         - connectivity rankings (clustering coefficient, etc...)
+        - roles over time (date, time since joined, time since T)
+        - rankings over time (date, time since role creation, time since T)
 
 ## Methods
 
@@ -18,3 +24,7 @@ Q: In the case of messages sent by ABB, should B-A go up by 1 or 2?
 Q: How will state be stored across instances of the bot? Should this be written to a file (if so, how do I maintain access to this file when it is hosted by Heroku?).TODO: On startup: setup network (based on file?)
 TODO: On shutdown: save network (to file?)
 Q: How do I maintain distinct networks across multiple active discords with this bot?
+Q: When should users be removed from the network (kick/ban/no messages for a long time...?)
+Q: How should users gaining/losing roles be handled for role-to-role connectivity (think carefully about this before designing storage and query responses across roles)?
+Q: Is there a way to provide .csv or .txt export of a network inside Discord?
+TODO: Allow admin modification of who can use which commands (by role/perms/user?). Be sure never to block server owner or users with similar perms to modifi-er (if possible...).
