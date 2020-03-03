@@ -23,6 +23,8 @@ async def on_message(message):
     dst = messages[1].author.id # author of previous message, TODO: probably breaks on first message in new channel
     if src == dst: # ignore replies to self
         return
+    if messages[1].author.bot or message.author.bot: #ignore bots
+        return
 
     # update network
     if src not in bot.network.keys():
