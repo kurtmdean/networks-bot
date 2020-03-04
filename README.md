@@ -7,12 +7,12 @@ Every instance will start the network anew. Whenever a message is sent, assume i
 ### Commands
 
 !network: Print the entire stored network
+
 !weight <nickname>: Print the weight of the link between caller and the member with the given nickname.
 !weight <nickname> <nickname>: Print the weight of the link between the two members with the two given nicknames.
 
-Soon...
 !neighbors: Print the connections between caller and all other members.
-!neighbors <member>: Print the connections between the given member and all other members.
+!neighbors <nickname>: Print the connections between the member with the given nickname and all other members.
 
 ## Goals
 

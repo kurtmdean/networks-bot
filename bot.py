@@ -55,6 +55,10 @@ def uid2nick(ctx, network):
             network.pop(uid)
 
 
+async def no_member(ctx, nick):
+    await ctx.send(f'{nick} is not a member of this guild.')
+
+
 @bot.command()
 async def network(ctx, id="name"):
     message = None
@@ -73,14 +77,17 @@ async def weight(ctx, nick1, nick2=None):
         member1 = ctx.author
         member2 = ctx.guild.get_member_named(nick1)
         if member2 is None:
-            await ctx.send(f'{nick1} is not a member of this guild.')
+            await no_member(ctx, nick1)
+            return
     else:
         member1 = ctx.guild.get_member_named(nick1)
         if member1 is None:
-            await ctx.send(f'{nick1} is not a member of this guild.')
+            await no_member(ctx, nick1)
+            return
         member2 = ctx.guild.get_member_named(nick2)
         if member2 is None:
-            await ctx.send(f'{nick2} is not a member of this guild.')
+            await no_member(ctx, nick2)
+            return
 
     if member1.id not in bot.network.keys(
     ) or member2.id not in bot.network[member1.id]:
@@ -89,6 +96,24 @@ async def weight(ctx, nick1, nick2=None):
         await ctx.send(
             f'{member1.nick} is connected to {member2.nick} with a link of weight {bot.network[member1.id][member2.id]}.'
         )
+
+
+@bot.command()
+async def neighbors(ctx, nick1=None):
+    member1 = None
+    if nick1 is None:
+        member1 = ctx.author
+    else:
+        member1 = ctx.guild.get_member_named(nick1)
+        if member1 is None:
+            await no_member(ctx, nick1)
+            return
+    if member1.id not in bot.network.keys():
+        ctx.send('{}')
+    else:
+        neighbors = copy.deepcopy(bot.network[member1.id])
+        uid2nick(ctx, neighbors)
+        await ctx.send(str(neighbors))
 
 
 bot.run(os.getenv('BOT_TOKEN'))
