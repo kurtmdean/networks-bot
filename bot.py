@@ -53,4 +53,15 @@ async def network(ctx):
     await uid2nick(message, ctx)
     await ctx.send(str(message))
 
+@bot.command()
+async def weight(ctx, member):
+    member = ctx.guild.get_member_named(member)
+    if ctx.author.id in bot.network.keys() and member is not None and member.id in bot.network.keys() and ctx.author.id != member.id:
+        author = ctx.author
+        alist = bot.network[author.id]
+        val = alist[member.id]
+        await ctx.send(str(val))
+    else:
+        await ctx.send(member.nick + " is not a member of this server.")
+
 bot.run(os.getenv('BOT_TOKEN'))
