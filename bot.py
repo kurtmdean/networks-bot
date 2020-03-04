@@ -10,58 +10,85 @@ bot = commands.Bot(command_prefix='!')
 
 bot.network = {}
 
+
 @bot.event
 async def on_ready():
-    await bot.change_presence(status=discord.Status.online, activity=discord.Game("with Status"))
     bot.network = {}
+
 
 @bot.listen()
 async def on_message(message):
-    src = message.author.id
-    messages = await message.channel.history(limit=123).flatten()
-    dst = messages[1].author.id # author of previous message, TODO: probably breaks on first message in new channel
-    if src == dst: # ignore replies to self
+
+    prev = message.author.id
+    history = await message.channel.history(limit=5).flatten()
+    curr = history[1].author.id
+
+    # ignore replies to self
+    if prev == curr:
         return
-    if messages[1].author.bot or message.author.bot: #ignore bots
+
+    # ignore bots
+    if message.author.bot or history[1].author.bot:
         return
 
     # update network
-    if src not in bot.network.keys():
-        bot.network[src] = {}
-    if dst not in bot.network.keys():
-        bot.network[dst] = {}
-    if dst not in bot.network[src].keys():
-        bot.network[src][dst] = 0
-    if src not in bot.network[dst].keys():
-        bot.network[dst][src] = 0
-    bot.network[src][dst] += 1
-    bot.network[dst][src] += 1
+    if prev not in bot.network.keys():
+        bot.network[prev] = {}
+    if curr not in bot.network.keys():
+        bot.network[curr] = {}
+    if curr not in bot.network[prev].keys():
+        bot.network[prev][curr] = 0
+    if prev not in bot.network[curr].keys():
+        bot.network[curr][prev] = 0
+    bot.network[prev][curr] += 1
+    bot.network[curr][prev] += 1
 
-async def uid2nick(dictionary, context):
-    for uid in dictionary:
-        guild = context.guild
+
+def uid2nick(ctx, network):
+    for uid in network:
+        guild = ctx.guild
         member = guild.get_member(uid)
         if member is not None:
-            if isinstance(dictionary[uid], dict):
-                await uid2nick(dictionary[uid], context)
-            dictionary[member.nick] = dictionary[uid]
-            dictionary.pop(uid)
+            if isinstance(network[uid], dict):
+                uid2nick(ctx, network[uid])
+            network[member.nick] = network[uid]
+            network.pop(uid)
+
 
 @bot.command()
-async def network(ctx):
-    message = copy.deepcopy(bot.network)
-    await uid2nick(message, ctx)
+async def network(ctx, id="name"):
+    message = None
+    if id == "uid":
+        message = str(bot.network)
+    if id == "name":
+        message = copy.deepcopy(bot.network)
+        uid2nick(ctx, message)
     await ctx.send(str(message))
 
+
 @bot.command()
-async def weight(ctx, member):
-    member = ctx.guild.get_member_named(member)
-    if ctx.author.id in bot.network.keys() and member is not None and member.id in bot.network.keys() and ctx.author.id != member.id:
-        author = ctx.author
-        alist = bot.network[author.id]
-        val = alist[member.id]
-        await ctx.send(str(val))
+async def weight(ctx, nick1, nick2=None):
+    member1 = member2 = None
+    if nick2 is None:
+        member1 = ctx.author
+        member2 = ctx.guild.get_member_named(nick1)
+        if member2 is None:
+            await ctx.send(f'{nick1} is not a member of this guild.')
     else:
-        await ctx.send(member.nick + " is not a member of this server.")
+        member1 = ctx.guild.get_member_named(nick1)
+        if member1 is None:
+            await ctx.send(f'{nick1} is not a member of this guild.')
+        member2 = ctx.guild.get_member_named(nick2)
+        if member2 is None:
+            await ctx.send(f'{nick2} is not a member of this guild.')
+
+    if member1.id not in bot.network.keys(
+    ) or member2.id not in bot.network[member1.id]:
+        await ctx.send(f'{member1.nick} is not connected to {member2.nick}.')
+    else:
+        await ctx.send(
+            f'{member1.nick} is connected to {member2.nick} with a link of weight {bot.network[member1.id][member2.id]}.'
+        )
+
 
 bot.run(os.getenv('BOT_TOKEN'))

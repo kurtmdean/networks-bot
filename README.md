@@ -2,17 +2,17 @@
 
 ## Current State
 
-Every instance will start the network anew. This can only work in one discord. Whenever a message is sent, assume it is a reply to the previous message sent in that channel. Update the network based on replies to other users.
+Every instance will start the network anew. Whenever a message is sent, assume it is a reply to the previous message sent in that channel. Update the network based on replies to other users.
 
 ### Commands
 
 !network: Print the entire stored network
+!weight <member>: Print the weight of the link between caller and the given member.
+!weight <member> <member>: Print the weight of the link between the two given members.
 
 Soon...
 !neighbors: Print the connections between caller and all other members.
 !neighbors <member>: Print the connections between the given member and all other members.
-!weight <member>: Print the weight of the link between caller and the given member.
-!weight <member> <member>: Print the weight of the link between the two given members.
 
 ## Goals
 
