@@ -2,7 +2,17 @@
 
 ## Current State
 
-Every instance will start the network anew. This can only work in one discord.
+Every instance will start the network anew. This can only work in one discord. Whenever a message is sent, assume it is a reply to the previous message sent in that channel. Update the network based on replies to other users.
+
+### Commands
+
+!network: Print the entire stored network
+
+Soon...
+!neighbors: Print the connections between caller and all other members.
+!neighbors <member>: Print the connections between the given member and all other members.
+!weight <member>: Print the weight of the link between caller and the given member.
+!weight <member> <member>: Print the weight of the link between the two given members.
 
 ## Goals
 
@@ -14,14 +24,10 @@ Every instance will start the network anew. This can only work in one discord.
         - roles over time (date, time since joined, time since T)
         - rankings over time (date, time since role creation, time since T)
 
-## Methods
-
-Whenever a message is sent, assume it is a reply to the previous message sent in that channel. Update the network based on replies to other users.
-
 ## TODO, Open Questions
 
-Q: In the case of messages sent by ABB, should B-A go up by 1 or 2?
-Q: How will state be stored across instances of the bot? Should this be written to a file (if so, how do I maintain access to this file when it is hosted by Heroku?).TODO: On startup: setup network (based on file?)
+Q: How will state be stored across instances of the bot? Should this be written to a file (if so, how do I maintain access to this file when it is hosted by Heroku?).
+TODO: On startup: setup network (based on file?)
 TODO: On shutdown: save network (to file?)
 Q: How do I maintain distinct networks across multiple active discords with this bot?
 Q: When should users be removed from the network (kick/ban/no messages for a long time...?)

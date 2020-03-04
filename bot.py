@@ -48,7 +48,7 @@ async def uid2nick(dictionary, context):
             dictionary.pop(uid)
 
 @bot.command()
-async def print(ctx):
+async def network(ctx):
     message = copy.deepcopy(bot.network)
     await uid2nick(message, ctx)
     await ctx.send(str(message))
