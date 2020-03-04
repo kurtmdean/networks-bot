@@ -7,8 +7,8 @@ Every instance will start the network anew. Whenever a message is sent, assume i
 ### Commands
 
 !network: Print the entire stored network
-!weight <member>: Print the weight of the link between caller and the given member.
-!weight <member> <member>: Print the weight of the link between the two given members.
+!weight <nickname>: Print the weight of the link between caller and the member with the given nickname.
+!weight <nickname> <nickname>: Print the weight of the link between the two members with the two given nicknames.
 
 Soon...
 !neighbors: Print the connections between caller and all other members.
@@ -24,7 +24,7 @@ Soon...
         - roles over time (date, time since joined, time since T)
         - rankings over time (date, time since role creation, time since T)
 
-## TODO, Open Questions
+## Open Questions
 
 Q: How will state be stored across instances of the bot? Should this be written to a file (if so, how do I maintain access to this file when it is hosted by Heroku?).
 TODO: On startup: setup network (based on file?)
