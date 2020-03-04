@@ -109,7 +109,7 @@ async def neighbors(ctx, nick1=None):
             await no_member(ctx, nick1)
             return
     if member1.id not in bot.network.keys():
-        await ctx.send('{{}}')
+        await ctx.send('{}')
     else:
         neighbors = copy.deepcopy(bot.network[member1.id])
         uid2nick(ctx, neighbors)
